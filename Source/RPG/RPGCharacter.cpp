@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "RPG.h"
+#include "AbilityManagerComponent.h"
 
 
 ARPGCharacter::ARPGCharacter()
@@ -49,6 +50,7 @@ ARPGCharacter::ARPGCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	AbilityManagerComponent = CreateDefaultSubobject<UAbilityManagerComponent>(TEXT("AbilityManager"));
 }
 
 void ARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -57,8 +59,8 @@ void ARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARPGCharacter::Move);
@@ -78,6 +80,7 @@ void ARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ARPGCharacter::Move(const FInputActionValue& Value)
 {
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -179,3 +182,15 @@ void ARPGCharacter::DoNormalAttack()
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	GetWorld()->SpawnActor<AExplosionBase>(NormalAttackClass, GetActorLocation() + GetActorForwardVector() * 100, FRotator::ZeroRotator, SpawnParameters);
 }
+
+
+//void ARPGCharacter::SpawnActor(TObjectPtr<AActor> actor)
+//{
+//	FActorSpawnParameters SpawnParameters;
+//	SpawnParameters.Owner = this;
+//	SpawnParameters.Instigator = this;
+//	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+//	//GetWorld()->SpawnActor<actor>(NormalAttackClass, GetActorLocation() + GetActorForwardVector() * 100, FRotator::ZeroRotator, SpawnParameters);
+//
+//
+//}
