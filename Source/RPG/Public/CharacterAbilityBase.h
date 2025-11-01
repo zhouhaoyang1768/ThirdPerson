@@ -24,9 +24,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	virtual bool CanActivate();
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	virtual bool CanInterrput(float InterruptIntensity);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	virtual void Activate();
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	virtual void Interrupt();
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	virtual void Deactivate();
@@ -38,11 +44,17 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FAbilityActivationEvent OnAbilityActivated;
 
+	UPROPERTY(BlueprintAssignable)
+	FAbilityActivationEvent OnAbilityInterrputed;
+
 
 	UPROPERTY(BlueprintAssignable)
 	FAbilityActivationEvent OnAbilityDeactivated;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability", meta = (Categories = "Character.Ability"))
+	float AntiInterruptability;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability", meta = (Categories = "Character.Ability")) 
 	FGameplayTag AbilityTag;
 

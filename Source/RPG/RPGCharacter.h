@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "CombatAttacker.h"
 #include "AbilityManagerComponent.h"
+#include "HitReactComponent.h"
+#include "HitReactComponent.h"
 #include "Logging/LogMacros.h"
 #include "GameplayTagAssetInterface.h"
 
@@ -36,9 +38,13 @@ class ARPGCharacter : public ACharacter, public ICombatAttacker, public IGamepla
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-
+public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAbilityManagerComponent> AbilityManagerComponent = nullptr;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UHitReactComponent> HitReactComponent = nullptr;
 	
 protected:
 

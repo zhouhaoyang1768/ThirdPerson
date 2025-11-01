@@ -40,6 +40,37 @@ bool UAbilityManagerComponent::TryActivateAvilityWithTag(const FGameplayTag& Abi
 	return false;
 }
 
+bool UAbilityManagerComponent::TryInterrput(float InterruptIntensity)
+{
+	if (ARPGCharacter* OwnerCharacter = Cast<ARPGCharacter>(GetOwner()))
+	{
+		FGameplayTagContainer OwnerGameplayTags;
+		OwnerCharacter->GetOwnedGameplayTags(OwnerGameplayTags);
+		for (FGameplayTag AbilityTag: OwnerGameplayTags)
+		{
+			if (TObjectPtr<UCharacterAbilityBase>* CharacterAbility = EquippedAbilitiesMap.Find(AbilityTag))
+			{
+				if (!(*CharacterAbility)->CanInterrput(InterruptIntensity))
+				{
+					return false;
+				}
+			}
+		}
+		for (FGameplayTag AbilityTag : OwnerGameplayTags)
+		{
+			if (TObjectPtr<UCharacterAbilityBase>* CharacterAbility = EquippedAbilitiesMap.Find(AbilityTag))
+			{
+				(*CharacterAbility)->Interrupt();
+			}
+		}
+		return true;
+
+
+	}
+	
+	return false;
+}
+
 
 bool UAbilityManagerComponent::TryDeactivateAvilityWithTag(const FGameplayTag& AbilityGameplayTag)
 {

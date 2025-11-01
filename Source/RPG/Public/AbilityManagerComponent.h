@@ -35,6 +35,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	bool TryActivateAvilityWithTag(const FGameplayTag& AbilityGameplayTag);
 
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	bool TryInterrput(float InterruptIntensity);
+
+
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	bool TryDeactivateAvilityWithTag(const FGameplayTag& AbilityGameplayTag);
 
