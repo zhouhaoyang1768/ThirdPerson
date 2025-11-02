@@ -7,8 +7,10 @@
 #include "Components/ActorComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Containers/Map.h"
+#include "GameplayTagContainer.h"
 #include "HitReactComponent.generated.h"
 
+// UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Ability_Supressed)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UHitReactComponent : public UActorComponent
@@ -20,6 +22,7 @@ public:
 	UHitReactComponent();
 
 protected:
+	static void RemoveTag(FName NotifyName);
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -34,6 +37,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float InterruptIntensityRecoveryRate;
+
+	FGameplayTag InterruptedTag;
 
 public:	
 	// Called every frame

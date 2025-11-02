@@ -19,9 +19,10 @@ public class RPG : ModuleRules
 			"GameplayStateTreeModule",
 			"UMG",
 			"Slate",
-			"GameplayTags"
-			
-		});
+			"GameplayTags",
+            "AnimGraphRuntime"
+
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 

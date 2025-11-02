@@ -2,7 +2,12 @@
 
 
 #include "HitReactComponent.h"
+#include "GameplayTagsManager.h"
+#include "PlayMontageCallbackProxy.h"
 #include "RPGCharacter.h"
+
+// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Character_Ability_Supressed, "Character.Ability.Supressed", "The character is being hit and interrupted")
+
 
 // Sets default values for this component's properties
 UHitReactComponent::UHitReactComponent()
@@ -18,6 +23,8 @@ UHitReactComponent::UHitReactComponent()
 // Called when the game starts
 void UHitReactComponent::BeginPlay()
 {
+	UGameplayTagsManager& gpmanager = UGameplayTagsManager::Get();
+	InterruptedTag = gpmanager.RequestGameplayTag(FName("Character.Ability.Supressed"));
 	Super::BeginPlay();
 
 	// ...
@@ -58,11 +65,28 @@ void UHitReactComponent::IncreaseIntensity(float amount)
 		bool CanInterrupt = Owner->AbilityManagerComponent->TryInterrput(InterruptIntensity);
 		if (CanInterrupt)
 		{
+			if (ARPGCharacter* character = Cast<ARPGCharacter>(GetOwner()))
+			{
+				//character->AddGameplayTagToCharacter(InterruptedTag);
+			}
 			if (ACharacter* character = Cast<ACharacter>(GetOwner()))
 			{
 				UAnimInstance* animInstance = character->GetMesh()->GetAnimInstance();
+				UPlayMontageCallbackProxy* PlayMontageCallbackProxy = UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(
+					character->GetMesh(),
+					Montage
+				);
+
+				//PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &RemoveTag);
+				//PlayMontageCallbackProxy->OnInterrputed.AddDynamic(this, &RemoveTag);
 				animInstance->Montage_Play(Montage,1.0f);
 			}
 		}
 	}
+}
+
+
+void UHitReactComponent::RemoveTag(FName NotifyName)
+{
+	//character->RemoveGameplayTagToCharacter(InterruptedTag);
 }
