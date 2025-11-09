@@ -22,7 +22,8 @@ public:
 	UHitReactComponent();
 
 protected:
-	static void RemoveTag(FName NotifyName);
+	UFUNCTION()
+	void OnInterruptEnd(FName fname);
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
@@ -38,6 +39,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float InterruptIntensityRecoveryRate;
 
+	UPROPERTY(BlueprintReadOnly)
 	FGameplayTag InterruptedTag;
 
 public:	
@@ -46,4 +48,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IncreaseIntensity(float amount);
+
+	UFUNCTION()
+	void OnCharacterTakeDamage(float Damage);
 };

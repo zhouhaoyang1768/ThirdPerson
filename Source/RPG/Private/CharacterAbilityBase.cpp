@@ -4,7 +4,7 @@
 #include "CharacterAbilityBase.h"
 #include "RPGCharacter.h"
 
-void UCharacterAbilityBase::Initialize_Implementation(class ARPGCharacter* InOwnerCharacter)
+void UCharacterAbilityBase::Initialize_Implementation(class ACharacterBase* InOwnerCharacter)
 {
 	this->OwnerCharacter = InOwnerCharacter;
 }
@@ -27,8 +27,6 @@ void UCharacterAbilityBase::Activate()
 	check(OwnerCharacter.IsValid());
 	OwnerCharacter->AddGameplayTagToCharacter(AbilityTag);
 	OnAbilityActivated.Broadcast(AbilityTag, this);
-
-	// OwnerCharacter->GetWorld()->SpawnActor();
 }
 
 void UCharacterAbilityBase::Interrupt()

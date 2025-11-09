@@ -4,13 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "ExplosionBase.h"
+#include "CharacterBase.h"
 #include "GameFramework/Character.h"
 #include "CombatAttacker.h"
-#include "AbilityManagerComponent.h"
-#include "HitReactComponent.h"
-#include "HitReactComponent.h"
 #include "Logging/LogMacros.h"
-#include "GameplayTagAssetInterface.h"
 
 #include "RPGCharacter.generated.h"
 
@@ -26,7 +23,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class ARPGCharacter : public ACharacter, public ICombatAttacker, public IGameplayTagAssetInterface
+class ARPGCharacter : public ACharacterBase, public ICombatAttacker
 {
 	GENERATED_BODY()
 
@@ -38,13 +35,6 @@ class ARPGCharacter : public ACharacter, public ICombatAttacker, public IGamepla
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UAbilityManagerComponent> AbilityManagerComponent = nullptr;
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UHitReactComponent> HitReactComponent = nullptr;
 	
 protected:
 
@@ -139,26 +129,5 @@ protected:
 	//UFUNCTION(BlueprintCallable)
 	//void SpawnActor(TObjectPtr<AActor> actor);
 
-public:
-	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override {
-		TagContainer = OwnedGameplayTags;
-	}
-	virtual void AddGameplayTagToCharacter(FGameplayTag& GameplayTagToAdd) {
-		OwnedGameplayTags.AddTag(GameplayTagToAdd);
-	}
-	virtual void RemoveGameplayTagFromCharacter(FGameplayTag& GameplayTagToRemove) {
-		OwnedGameplayTags.RemoveTag(GameplayTagToRemove);
-	}
-	virtual void AddGameplayTagsToCharacter(FGameplayTagContainer& GameplayTagsToAdd) {
-		OwnedGameplayTags.AppendTags(GameplayTagsToAdd);
-	}
-	virtual void RemoveGameplayTagsFromCharacter(FGameplayTagContainer& GameplayTagsToRemove) {
-		OwnedGameplayTags.RemoveTags(GameplayTagsToRemove);
-	}
-
-
-protected:
-	UPROPERTY(VisibleAnywhere)
-	FGameplayTagContainer OwnedGameplayTags;
 };
 

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+// #include "GameFramework/Character.h"
+#include "CharacterBase.h"
 #include "CombatAttacker.h"
 #include "CombatDamageable.h"
 #include "Animation/AnimMontage.h"
@@ -13,6 +14,7 @@
 class UWidgetComponent;
 class UCombatLifeBar;
 class UAnimMontage;
+class ACharacterBase;
 
 /** Completed attack animation delegate for StateTree */
 DECLARE_DELEGATE(FOnEnemyAttackCompleted);
@@ -28,7 +30,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDied);
  *  Its bundled AI Controller runs logic through StateTree
  */
 UCLASS(abstract)
-class ACombatEnemy : public ACharacter, public ICombatAttacker, public ICombatDamageable
+class ACombatEnemy : public ACharacterBase, public ICombatAttacker, public ICombatDamageable
 {
 	GENERATED_BODY()
 

@@ -27,6 +27,11 @@ void UHitReactComponent::BeginPlay()
 	InterruptedTag = gpmanager.RequestGameplayTag(FName("Character.Ability.Supressed"));
 	Super::BeginPlay();
 
+	if(ACharacterBase* const Character = Cast<ACharacterBase>(GetOwner()))
+	{
+		// Character->OnCharacterTageDamage.AddDynamic(this, &ThisClass::OnCharacterTakeDamage);
+	}
+
 	// ...
 	
 }
@@ -60,33 +65,39 @@ void UHitReactComponent::IncreaseIntensity(float amount)
 		}
 	}
 
-	if (ARPGCharacter* Owner = Cast<ARPGCharacter>(GetOwner()))
+	if (ACharacterBase* Owner = Cast<ACharacterBase>(GetOwner()))
 	{
 		bool CanInterrupt = Owner->AbilityManagerComponent->TryInterrput(InterruptIntensity);
 		if (CanInterrupt)
 		{
-			if (ARPGCharacter* character = Cast<ARPGCharacter>(GetOwner()))
-			{
-				//character->AddGameplayTagToCharacter(InterruptedTag);
-			}
-			if (ACharacter* character = Cast<ACharacter>(GetOwner()))
-			{
-				UAnimInstance* animInstance = character->GetMesh()->GetAnimInstance();
-				UPlayMontageCallbackProxy* PlayMontageCallbackProxy = UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(
-					character->GetMesh(),
-					Montage
-				);
+			Owner->AddGameplayTagToCharacter(InterruptedTag);
+			
+			UAnimInstance* animInstance = Owner->GetMesh()->GetAnimInstance();
+			UPlayMontageCallbackProxy* PlayMontageCallbackProxy = UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(
+				Owner->GetMesh(),
+				Montage
+			);
 
-				//PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &RemoveTag);
-				//PlayMontageCallbackProxy->OnInterrputed.AddDynamic(this, &RemoveTag);
-				animInstance->Montage_Play(Montage,1.0f);
-			}
+			PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &ThisClass::OnInterruptEnd);
+			PlayMontageCallbackProxy->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptEnd);
+			animInstance->Montage_Play(Montage,1.0f);
 		}
 	}
 }
 
 
-void UHitReactComponent::RemoveTag(FName NotifyName)
+void UHitReactComponent::OnInterruptEnd(FName fname)
 {
-	//character->RemoveGameplayTagToCharacter(InterruptedTag);
+
+	UE_LOG(LogTemp, Warning, TEXT("on interrupt end"));
+	if (ACharacterBase* const Character = Cast<ACharacterBase>(GetOwner()))
+	{
+		Character->RemoveGameplayTagFromCharacter(InterruptedTag);
+	}
+}
+
+
+void UHitReactComponent::OnCharacterTakeDamage(float Damage)
+{
+	IncreaseIntensity(Damage);
 }

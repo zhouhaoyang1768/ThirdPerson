@@ -3,7 +3,7 @@
 
 #include "AbilityManagerComponent.h"
 #include "CharacterAbilityBase.h"
-#include "RPGCharacter.h"
+#include "CharacterBase.h"
 #include "GameplayTagContainer.h"
 
 UAbilityManagerComponent::UAbilityManagerComponent()
@@ -19,7 +19,7 @@ void UAbilityManagerComponent::BeginPlay()
 	for (TSubclassOf<UCharacterAbilityBase>& AbilityClass : InitialEquippedAbilities)
 	{
 		UCharacterAbilityBase* CharacterAbility = NewObject<UCharacterAbilityBase>(this, AbilityClass.Get(), FName(*AbilityClass->GetName()));
-		CharacterAbility->Initialize(Cast<ARPGCharacter>(GetOwner()));
+		CharacterAbility->Initialize(Cast<ACharacterBase>(GetOwner()));
 		EquippedAbilitiesMap.Add(CharacterAbility->GetAbilityGameplayTag(), CharacterAbility);
 	}
 	
@@ -42,7 +42,7 @@ bool UAbilityManagerComponent::TryActivateAvilityWithTag(const FGameplayTag& Abi
 
 bool UAbilityManagerComponent::TryInterrput(float InterruptIntensity)
 {
-	if (ARPGCharacter* OwnerCharacter = Cast<ARPGCharacter>(GetOwner()))
+	if (ACharacterBase* OwnerCharacter = Cast<ACharacterBase>(GetOwner()))
 	{
 		FGameplayTagContainer OwnerGameplayTags;
 		OwnerCharacter->GetOwnedGameplayTags(OwnerGameplayTags);
@@ -86,7 +86,7 @@ bool UAbilityManagerComponent::CanMove()
 {
 	/*FGameplayTagContainer OwnerGameplayTags;
 
-	if (ARPGCharacter* character = Cast<ARPGCharacter>(GetOwner()))
+	if (ACharacterBase* character = Cast<ACharacterBase>(GetOwner()))
 	{
 		character->GetOwnedGameplayTags(OwnerGameplayTags);
 		return OwnerGameplayTags.IsEmpty();

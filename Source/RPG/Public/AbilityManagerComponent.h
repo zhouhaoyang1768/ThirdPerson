@@ -2,9 +2,11 @@
 
 #pragma once
 
+class UCharacterAbilityBase;
+
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "CharacterAbilityBase.h"
+// #include "CharacterAbilityBase.h"
 #include "GameplayTagContainer.h"
 
 

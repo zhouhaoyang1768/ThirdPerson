@@ -2,14 +2,17 @@
 
 #pragma once
 
+
+
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameplayTagContainer.h"
+#include "CharacterBase.h"
 
 
 #include "CharacterAbilityBase.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilityActivationEvent, const FGameplayTag&, AvilityGameplayTag, const UCharacterAbilityBase*, AbilityPtr);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilityActivationEvent, const FGameplayTag&, AbilityGameplayTag, const UCharacterAbilityBase*, AbilityPtr);
 
 /**
  * 
@@ -20,7 +23,7 @@ class RPG_API UCharacterAbilityBase : public UObject
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Ability")
-	void Initialize(class ARPGCharacter* InOwnerCharacter);
+	void Initialize(class ACharacterBase* InOwnerCharacter);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	virtual bool CanActivate();
@@ -67,5 +70,5 @@ protected:
 	FGameplayTagContainer ActivationBlockedTags;
 	
 	UPROPERTY(Transient, BlueprintReadOnly)
-	TWeakObjectPtr<class ARPGCharacter> OwnerCharacter = nullptr;
+	TWeakObjectPtr<class ACharacterBase> OwnerCharacter = nullptr;
 };
