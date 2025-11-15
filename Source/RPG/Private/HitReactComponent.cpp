@@ -73,23 +73,28 @@ void UHitReactComponent::IncreaseIntensity(float amount)
 			Owner->AddGameplayTagToCharacter(InterruptedTag);
 			
 			UAnimInstance* animInstance = Owner->GetMesh()->GetAnimInstance();
-			UPlayMontageCallbackProxy* PlayMontageCallbackProxy = UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(
-				Owner->GetMesh(),
-				Montage
-			);
+			/*UPlayMontageCallbackProxy* PlayMontageCallbackProxy = UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(
+				Owner->GetMesh(), Montage
+			);*/
+			GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Red, IsValid(Montage) ? "valid" : "not valid");
+			//PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &ThisClass::OnInterruptEnd);
+			//PlayMontageCallbackProxy->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptEnd);
 
-			PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &ThisClass::OnInterruptEnd);
-			PlayMontageCallbackProxy->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptEnd);
+
+			FOnMontageEnded OnMontageEnded;
+			OnMontageEnded.BindUFunction(this, FName("OnInterruptEnd"));
+
+			animInstance->StopAllMontages(0);
+			animInstance->Montage_SetEndDelegate(OnMontageEnded, Montage);
 			animInstance->Montage_Play(Montage,1.0f);
 		}
 	}
 }
 
 
-void UHitReactComponent::OnInterruptEnd(FName fname)
+void UHitReactComponent::OnInterruptEnd()
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("on interrupt end"));
+	GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Red, "interrupt end");
 	if (ACharacterBase* const Character = Cast<ACharacterBase>(GetOwner()))
 	{
 		Character->RemoveGameplayTagFromCharacter(InterruptedTag);

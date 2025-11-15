@@ -17,7 +17,7 @@ ACharacterBase::ACharacterBase()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 
 	// FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
-	FName RightHand = FName(TEXT("ik_hand_r"));
+	FName RightHand = FName(TEXT("HandGrip_R"));
 	FQuat Rotation(FVector::YAxisVector, 90);
 	WeaponCapsule->SetRelativeRotation(Rotation);
 	WeaponCapsule->SetupAttachment(GetMesh(), RightHand);
@@ -64,10 +64,10 @@ void ACharacterBase::RemoveGameplayTagsFromCharacter(FGameplayTagContainer& Game
 void ACharacterBase::HandleAnimNotify(EAttackEventType AttackEventType)
 {
 
-	FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
+	FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
 
-	FName LeftHand = FName(TEXT("ik_hand_l"));
-	FName RightHand = FName(TEXT("ik_hand_r"));
+	FName LeftHand = FName(TEXT("HandGrip_L"));
+	FName RightHand = FName(TEXT("HandGrip_R"));
 	FName RightFoot = FName(TEXT("ik_foot_r"));
 
 	switch (AttackEventType)

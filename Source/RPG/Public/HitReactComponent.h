@@ -23,7 +23,7 @@ public:
 
 protected:
 	UFUNCTION()
-	void OnInterruptEnd(FName fname);
+	void OnInterruptEnd();
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
