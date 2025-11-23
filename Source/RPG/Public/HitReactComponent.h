@@ -22,13 +22,20 @@ public:
 	UHitReactComponent();
 
 protected:
+	unsigned int PlayingInterruptMontageCount;
 	UFUNCTION()
-	void OnInterruptEnd();
+	void OnInterruptBegin(UAnimMontage* Montage);
+
+	UFUNCTION()
+	void OnInterruptEnd(UAnimMontage* Montage, bool Interrupted);
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly)
 	TMap<float, TObjectPtr<UAnimMontage>> HitReactionAnimations;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool KnockbackImmune;
 
 	UPROPERTY(BlueprintReadOnly)
 	float InterruptIntensity;
@@ -45,6 +52,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable)
+	void BeginKnockbackImmune();
+
+	UFUNCTION(BlueprintCallable)
+	void EndKnockbackImmune();
 
 	UFUNCTION(BlueprintCallable)
 	void IncreaseIntensity(float amount);

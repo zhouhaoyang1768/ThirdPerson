@@ -23,6 +23,7 @@ public:
 	UAbilityManagerComponent();
 
 protected:
+	void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -33,6 +34,9 @@ protected:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Ability")
 	TMap<FGameplayTag, TObjectPtr<UCharacterAbilityBase>> EquippedAbilitiesMap;
 public:		
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	bool CanActivate(const FGameplayTag& AbilityGameplayTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	bool TryActivateAvilityWithTag(const FGameplayTag& AbilityGameplayTag);

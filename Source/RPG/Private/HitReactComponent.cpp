@@ -16,6 +16,7 @@ UHitReactComponent::UHitReactComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	InterruptIntensity = 0;
+	PlayingInterruptMontageCount = 0;
 	// ...
 }
 
@@ -31,7 +32,12 @@ void UHitReactComponent::BeginPlay()
 	{
 		// Character->OnCharacterTageDamage.AddDynamic(this, &ThisClass::OnCharacterTakeDamage);
 	}
-
+	if (ACharacterBase* Owner = Cast<ACharacterBase>(GetOwner()))
+	{
+		UAnimInstance* animInstance = Owner->GetMesh()->GetAnimInstance();
+		animInstance->OnMontageEnded.AddDynamic(this, &ThisClass::OnInterruptEnd);
+		animInstance->OnMontageStarted.AddDynamic(this, &ThisClass::OnInterruptBegin);
+	}
 	// ...
 	
 }
@@ -50,6 +56,8 @@ void UHitReactComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UHitReactComponent::IncreaseIntensity(float amount)
 {
+	if (KnockbackImmune) return;
+
 	InterruptIntensity += amount;
 	if (InterruptIntensity < 0) InterruptIntensity = 0;
 	if (InterruptIntensity > MaxInterruptIntensity) InterruptIntensity = MaxInterruptIntensity;
@@ -73,31 +81,56 @@ void UHitReactComponent::IncreaseIntensity(float amount)
 			Owner->AddGameplayTagToCharacter(InterruptedTag);
 			
 			UAnimInstance* animInstance = Owner->GetMesh()->GetAnimInstance();
-			/*UPlayMontageCallbackProxy* PlayMontageCallbackProxy = UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(
-				Owner->GetMesh(), Montage
-			);*/
-			GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Red, IsValid(Montage) ? "valid" : "not valid");
-			//PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &ThisClass::OnInterruptEnd);
-			//PlayMontageCallbackProxy->OnInterrupted.AddDynamic(this, &ThisClass::OnInterruptEnd);
-
-
-			FOnMontageEnded OnMontageEnded;
-			OnMontageEnded.BindUFunction(this, FName("OnInterruptEnd"));
 
 			animInstance->StopAllMontages(0);
-			animInstance->Montage_SetEndDelegate(OnMontageEnded, Montage);
 			animInstance->Montage_Play(Montage,1.0f);
 		}
 	}
 }
 
-
-void UHitReactComponent::OnInterruptEnd()
+void UHitReactComponent::OnInterruptBegin(UAnimMontage* Montage)
 {
+	bool isInterruptMontage = false;
+	for (auto& pair : HitReactionAnimations)
+	{
+		if (pair.Value == Montage)
+		{
+			isInterruptMontage = true;
+			break;
+		}
+	}
+	if (!isInterruptMontage)
+	{
+		return;
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Red, "interrupt begin");
+	if (ACharacterBase* const Character = Cast<ACharacterBase>(GetOwner()))
+	{
+		++PlayingInterruptMontageCount;
+		Character->AddGameplayTagToCharacter(InterruptedTag);
+	}
+}
+
+void UHitReactComponent::OnInterruptEnd(UAnimMontage* Montage, bool Interrupted)
+{
+	bool isInterruptMontage = false;
+	for (auto& pair : HitReactionAnimations)
+	{
+		if (pair.Value == Montage)
+		{
+			isInterruptMontage = true;
+			break;
+		}
+	}
+	if (!isInterruptMontage)
+	{
+		return;
+	}
 	GEngine->AddOnScreenDebugMessage(-1, 15, FColor::Red, "interrupt end");
 	if (ACharacterBase* const Character = Cast<ACharacterBase>(GetOwner()))
 	{
-		Character->RemoveGameplayTagFromCharacter(InterruptedTag);
+		--PlayingInterruptMontageCount;
+		if (!PlayingInterruptMontageCount) Character->RemoveGameplayTagFromCharacter(InterruptedTag);
 	}
 }
 
@@ -105,4 +138,14 @@ void UHitReactComponent::OnInterruptEnd()
 void UHitReactComponent::OnCharacterTakeDamage(float Damage)
 {
 	IncreaseIntensity(Damage);
+}
+
+void UHitReactComponent::BeginKnockbackImmune()
+{
+	KnockbackImmune = true;
+}
+
+void UHitReactComponent::EndKnockbackImmune()
+{
+	KnockbackImmune = false;
 }

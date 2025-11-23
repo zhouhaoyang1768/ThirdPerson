@@ -8,7 +8,7 @@
 
 UAbilityManagerComponent::UAbilityManagerComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 }
 
@@ -24,8 +24,23 @@ void UAbilityManagerComponent::BeginPlay()
 	}
 	
 }
+void UAbilityManagerComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	for (auto& pair : EquippedAbilitiesMap)
+	{
+		pair.Value->CoolDownTick(DeltaTime);
+	}
+}
 
 
+bool UAbilityManagerComponent::CanActivate(const FGameplayTag& AbilityGameplayTag)
+{
+	if (TObjectPtr<UCharacterAbilityBase>* CharacterAbility = EquippedAbilitiesMap.Find(AbilityGameplayTag))
+	{
+		return(*CharacterAbility)->CanActivate();
+	}
+	return false;
+}
 
 bool UAbilityManagerComponent::TryActivateAvilityWithTag(const FGameplayTag& AbilityGameplayTag)
 {

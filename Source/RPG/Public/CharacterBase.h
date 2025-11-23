@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "HitReactComponent.h"
 #include "HealthComponent.h"
+#include "WeaponComponent.h"
 #include "GameplayTagAssetInterface.h"
 #include "AnimNotifyEnums.h"
 #include "CharacterBase.generated.h"
@@ -38,10 +39,9 @@ public:
 
 /* ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~  ~~~~ */
 public:
-
-
 	UPROPERTY(BlueprintAssignable)
 	FTakeDamageEvent OnTakeDamage;
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAbilityManagerComponent> AbilityManagerComponent = nullptr;
@@ -51,8 +51,16 @@ public:
 	TObjectPtr<class UHitReactComponent> HitReactComponent = nullptr;
 
 
+	UPROPERTY(EditDefaultsOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UWeaponComponent> WeaponComponent = nullptr;
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCapsuleComponent> WeaponCapsule = nullptr;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UStaticMeshComponent> WeaponMesh = nullptr;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))

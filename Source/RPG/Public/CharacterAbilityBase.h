@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	virtual void Deactivate();
 
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	virtual void CoolDownTick(float dt);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	const FGameplayTag GetAbilityGameplayTag() { return AbilityTag; }
@@ -57,6 +60,12 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability", meta = (Categories = "Character.Ability"))
 	float AntiInterruptability;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability", meta = (Categories = "Character.Ability"))
+	float CoolDown;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability", meta = (Categories = "Character.Ability"))
+	float CoolDownCounter;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability", meta = (Categories = "Character.Ability")) 
 	FGameplayTag AbilityTag;

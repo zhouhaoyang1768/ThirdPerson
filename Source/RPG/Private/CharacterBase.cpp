@@ -14,20 +14,27 @@ ACharacterBase::ACharacterBase()
 	AbilityManagerComponent = CreateDefaultSubobject<UAbilityManagerComponent>(TEXT("AbilityManager"));
 	HitReactComponent = CreateDefaultSubobject<UHitReactComponent>(TEXT("HitReact"));
 	WeaponCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("WeaponCapsule"));
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 
-	// FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
+	FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
 	FName RightHand = FName(TEXT("HandGrip_R"));
-	FQuat Rotation(FVector::YAxisVector, 90);
-	WeaponCapsule->SetRelativeRotation(Rotation);
+
+	WeaponCapsule->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 50), FVector(0.3, 0.3, 1.0)));
 	WeaponCapsule->SetupAttachment(GetMesh(), RightHand);
 	WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+
+
+	WeaponMesh->SetupAttachment(GetMesh(), RightHand);
+	WeaponMesh->SetRelativeTransform(FTransform(FRotator(-90, 0, 0), FVector(-5, 0, 50), FVector(0.3, 0.3, 0.3)));
 }
 
 // Called when the game starts or when spawned
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 // Called every frame
@@ -41,7 +48,6 @@ void ACharacterBase::Tick(float DeltaTime)
 void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 
@@ -63,39 +69,33 @@ void ACharacterBase::RemoveGameplayTagsFromCharacter(FGameplayTagContainer& Game
 
 void ACharacterBase::HandleAnimNotify(EAttackEventType AttackEventType)
 {
-
-	FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
-
-	FName LeftHand = FName(TEXT("HandGrip_L"));
-	FName RightHand = FName(TEXT("HandGrip_R"));
-	FName RightFoot = FName(TEXT("ik_foot_r"));
-
 	switch (AttackEventType)
 	{
 	case EAttackEventType::ATTACH_LEFT_HAND:
-		WeaponCapsule->AttachToComponent(GetMesh(), WeaponCapsuleTransformRules, LeftHand);
-		//WeaponCapsule->Activate();
-		WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
+		//WeaponComponent->AttachWeaponCapsuleTo(FName(TEXT("HandGrip_L")), FTransform(FQuat(FVector::XAxisVector, 90)));
+		WeaponComponent->EnableHitbox();
+		//WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
 		break;
 
 	case EAttackEventType::ATTACH_RIGHT_HAND:
-		WeaponCapsule->AttachToComponent(GetMesh(), WeaponCapsuleTransformRules, RightHand);
-		//WeaponCapsule->Activate();
-		WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
+		//WeaponComponent->AttachWeaponCapsuleTo(FName(TEXT("HandGrip_R")), FTransform(FQuat(FVector::XAxisVector, 90)));
+		WeaponComponent->EnableHitbox();
+		//WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
 		break;
 
 	case EAttackEventType::ATTACH_RIGHT_FOOT:
-		WeaponCapsule->AttachToComponent(GetMesh(), WeaponCapsuleTransformRules, RightFoot);
-		//WeaponCapsule->Activate();
-		WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
+		//WeaponComponent->AttachWeaponCapsuleTo(FName(TEXT("foot_r_Socket")), FTransform(FQuat(FVector::ZAxisVector, 90)));
+		WeaponComponent->EnableHitbox();
+		//WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
 		break;
+
 	case EAttackEventType::DETACH:
-		//WeaponCapsule->Deactivate();
-		WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		WeaponComponent->DisableHitbox();
+		//WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 		break;
 	default:
-		//WeaponCapsule->Deactivate();
-		WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		WeaponComponent->DisableHitbox();
+		//WeaponCapsule->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 		break;
 	}
 }

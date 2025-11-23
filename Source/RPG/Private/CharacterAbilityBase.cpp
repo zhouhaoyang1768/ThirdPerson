@@ -14,7 +14,7 @@ bool UCharacterAbilityBase::CanActivate()
 	FGameplayTagContainer OwnerGameplayTags;
 	check(OwnerCharacter.IsValid());
 	OwnerCharacter->GetOwnedGameplayTags(OwnerGameplayTags);
-	return !OwnerGameplayTags.HasAny(ActivationBlockedTags);
+	return !OwnerGameplayTags.HasAny(ActivationBlockedTags) && CoolDownCounter == 0;
 }
 
 bool UCharacterAbilityBase::CanInterrput(float InterruptIntensity)
@@ -26,6 +26,7 @@ void UCharacterAbilityBase::Activate()
 {
 	check(OwnerCharacter.IsValid());
 	OwnerCharacter->AddGameplayTagToCharacter(AbilityTag);
+	CoolDownCounter = CoolDown;
 	OnAbilityActivated.Broadcast(AbilityTag, this);
 }
 
@@ -41,4 +42,10 @@ void UCharacterAbilityBase::Deactivate()
 	check(OwnerCharacter.IsValid());
 	OnAbilityDeactivated.Broadcast(AbilityTag, this);
 	OwnerCharacter->RemoveGameplayTagFromCharacter(AbilityTag);
+}
+
+void UCharacterAbilityBase::CoolDownTick(float dt)
+{
+	CoolDownCounter -= dt;
+	if (CoolDownCounter < 0) CoolDownCounter = 0;
 }
