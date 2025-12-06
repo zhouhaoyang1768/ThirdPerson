@@ -10,6 +10,7 @@
 #include "HitReactComponent.h"
 #include "HealthComponent.h"
 #include "WeaponComponent.h"
+#include "InventoryComponent.h"
 #include "GameplayTagAssetInterface.h"
 #include "AnimNotifyEnums.h"
 #include "CharacterBase.generated.h"
@@ -42,6 +43,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FTakeDamageEvent OnTakeDamage;
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInventoryComponent> InventoryComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UAbilityManagerComponent> AbilityManagerComponent = nullptr;
