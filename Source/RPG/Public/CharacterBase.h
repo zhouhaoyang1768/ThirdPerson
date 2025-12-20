@@ -68,7 +68,7 @@ public:
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UHealthComponent> HealthComponent = nullptr;
+	TObjectPtr<class UHealthComponent> HealthComponentV2 = nullptr;
 public:
 	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 	virtual void AddGameplayTagToCharacter(FGameplayTag& GameplayTagToAdd);

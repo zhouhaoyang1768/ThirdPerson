@@ -31,6 +31,8 @@ protected:
 
 
 public:
+	UFUNCTION(BlueprintPure)
+	FString GetName() const { return Name; }
 	UStaticMesh* GetMesh() { return Mesh; }
 	virtual void OnPickup(ACharacterBase* NewOwner) {}
 	virtual void OnDrop() {}

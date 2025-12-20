@@ -18,7 +18,7 @@ ADroppedItem::ADroppedItem()
 	Collision->SetCollisionEnabled(ECollisionEnabled::Type::PhysicsOnly);
 	Collision->SetCollisionProfileName(TEXT("BlockAll"));
 
-	PickupRange->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(2.0, 2.0, 2.0)));
+	PickupRange->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(4.0, 4.0, 4.0)));
 	PickupRange->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
 
 

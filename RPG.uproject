@@ -12,7 +12,8 @@
 				"Engine",
 				"AIModule",
 				"UMG",
-				"CoreUObject"
+				"CoreUObject",
+				"ModelViewViewModel"
 			]
 		}
 	],
@@ -41,6 +42,10 @@
 				"Mac",
 				"Linux"
 			]
+		},
+		{
+			"Name": "ModelViewViewModel",
+			"Enabled": true
 		}
 	]
 }

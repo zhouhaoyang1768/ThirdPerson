@@ -34,6 +34,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PickUp(ACharacterBase* Character);
 
+	UFUNCTION(BlueprintCallable)
+	UItemBase* GetItem(ACharacterBase* Character) { return Item; }
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadonly)

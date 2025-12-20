@@ -16,7 +16,7 @@ ACharacterBase::ACharacterBase()
 	WeaponCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("WeaponCapsule"));
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	HealthComponentV2 = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 	FAttachmentTransformRules WeaponCapsuleTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
