@@ -30,6 +30,9 @@ class RPG_API UMVVM_Pickup : public UMVVMViewModelBase
 	void AdjustCursor();
 
 public:
+	UFUNCTION(BlueprintCallable) 
+	void Reset() { DroppedItems.Reset(); }
+
 	UFUNCTION(BlueprintCallable)
 	bool IsItemsUpdated() const { return ItemsUpdated; }
 

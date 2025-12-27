@@ -16,6 +16,7 @@ UAbilityManagerComponent::UAbilityManagerComponent()
 void UAbilityManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	for (TSubclassOf<UCharacterAbilityBase>& AbilityClass : InitialEquippedAbilities)
 	{
 		UCharacterAbilityBase* CharacterAbility = NewObject<UCharacterAbilityBase>(this, AbilityClass.Get(), FName(*AbilityClass->GetName()));

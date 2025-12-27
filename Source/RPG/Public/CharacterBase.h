@@ -16,6 +16,7 @@
 #include "CharacterBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FTakeDamageEvent, const AActor*, Source, float, Damage, float, InterruptIntensity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealEvent, const AActor*, Source, float, Amount);
 
 UCLASS()
 class RPG_API ACharacterBase : public ACharacter, public IGameplayTagAssetInterface
@@ -42,6 +43,9 @@ public:
 public:
 	UPROPERTY(BlueprintAssignable)
 	FTakeDamageEvent OnTakeDamage;
+
+	UPROPERTY(BlueprintAssignable)
+	FHealEvent OnHeal;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -80,6 +84,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HandleDamage(const AActor* Source, float Damage, float InterruptIntensity);
+
+	UFUNCTION(BlueprintCallable)
+	void HandleHeal(const AActor* Source, float Amount);
 
 protected:
 	UPROPERTY(VisibleAnywhere)

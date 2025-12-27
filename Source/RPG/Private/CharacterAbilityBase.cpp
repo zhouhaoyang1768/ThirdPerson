@@ -24,6 +24,7 @@ bool UCharacterAbilityBase::CanInterrput(float InterruptIntensity)
 
 void UCharacterAbilityBase::Activate()
 {
+	TRACE_CPUPROFILER_EVENT_SCOPE_STR("Ability Activate");
 	check(OwnerCharacter.IsValid());
 	OwnerCharacter->AddGameplayTagToCharacter(AbilityTag);
 	CoolDownCounter = CoolDown;

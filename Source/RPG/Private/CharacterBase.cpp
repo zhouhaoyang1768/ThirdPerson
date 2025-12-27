@@ -105,3 +105,8 @@ void ACharacterBase::HandleDamage(const AActor* Source, float Damage, float Inte
 {
 	OnTakeDamage.Broadcast(Source, Damage, InterruptIntensity);
 }
+
+void ACharacterBase::HandleHeal(const AActor* Source, float Amount)
+{
+	OnHeal.Broadcast(Source, Amount);
+}
